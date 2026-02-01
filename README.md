@@ -1,6 +1,6 @@
 # SloaneX
 
-Production-ready Next.js (App Router) site designed for Vercel. It supports real uploads, storage, and deletion of images/videos via Vercel Blob, and metadata storage via Upstash Redis.
+Production-ready Next.js (App Router) site designed for Vercel. It supports real uploads, storage, and deletion of images/videos via Vercel Blob, and metadata storage via Vercel KV.
 
 ## Features
 - Pink + purple themed responsive UI.

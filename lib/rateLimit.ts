@@ -1,15 +1,13 @@
-import { Redis } from "@upstash/redis";
-
-const redis = Redis.fromEnv();
+import { kv } from "@vercel/kv";
 
 export async function checkRateLimit(
   key: string,
   limit: number,
   windowSeconds: number
 ) {
-  const count = await redis.incr(key);
+  const count = await kv.incr(key);
   if (count === 1) {
-    await redis.expire(key, windowSeconds);
+    await kv.expire(key, windowSeconds);
   }
   return count <= limit;
 }

@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -116,16 +115,15 @@ export default function ExclusiveClient() {
                     onClick={() => openLightbox(item)}
                     aria-label="Expand image"
                   >
-                    <Image
+                    <img
                       src={item.url}
                       alt="Exclusive content"
-                      width={320}
-                      height={240}
                       style={{
                         width: "100%",
                         height: 160,
                         objectFit: "contain"
                       }}
+                      loading="lazy"
                     />
                   </button>
                 </div>
@@ -184,12 +182,10 @@ export default function ExclusiveClient() {
             </button>
             <div className="lightbox-content" style={{ marginTop: "16px" }}>
               {lightbox.type === "image" ? (
-                <Image
+                <img
                   src={lightbox.url}
                   alt="Expanded content"
-                  width={1200}
-                  height={800}
-                  style={{ maxWidth: "100%", maxHeight: "70vh", height: "auto" }}
+                  style={{ maxWidth: "100%", maxHeight: "70vh" }}
                 />
               ) : (
                 <video

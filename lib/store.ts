@@ -1,4 +1,4 @@
-import { Redis } from "@upstash/redis";
+import { kv } from "@vercel/kv";
 
 export type MediaKind = "image" | "video";
 
@@ -19,12 +19,10 @@ const VIDEO_KEY = "media:videos";
 const BANNER_KEY = "settings:banner";
 const PROFILE_KEY = "settings:profile";
 
-const redis = Redis.fromEnv();
-
 export async function getSiteSettings(): Promise<SiteSettings> {
   const [bannerUrl, profileUrl] = await Promise.all([
-    redis.get<string>(BANNER_KEY),
-    redis.get<string>(PROFILE_KEY)
+    kv.get<string>(BANNER_KEY),
+    kv.get<string>(PROFILE_KEY)
   ]);
 
   return {
@@ -38,25 +36,25 @@ export async function setSiteSetting(
   url: string
 ) {
   const mapKey = key === "banner" ? BANNER_KEY : PROFILE_KEY;
-  await redis.set(mapKey, url);
+  await kv.set(mapKey, url);
 }
 
 export async function listMedia(kind: MediaKind): Promise<MediaItem[]> {
   const key = kind === "image" ? IMAGE_KEY : VIDEO_KEY;
-  const items = await redis.get<MediaItem[]>(key);
+  const items = await kv.get<MediaItem[]>(key);
   return items ?? [];
 }
 
 export async function addMedia(kind: MediaKind, item: MediaItem) {
   const key = kind === "image" ? IMAGE_KEY : VIDEO_KEY;
   const items = await listMedia(kind);
-  await redis.set(key, [item, ...items]);
+  await kv.set(key, [item, ...items]);
 }
 
 export async function removeMedia(kind: MediaKind, id: string) {
   const key = kind === "image" ? IMAGE_KEY : VIDEO_KEY;
   const items = await listMedia(kind);
   const nextItems = items.filter((item) => item.id !== id);
-  await redis.set(key, nextItems);
+  await kv.set(key, nextItems);
   return items.find((item) => item.id === id) ?? null;
 }

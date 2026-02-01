@@ -1,23 +1,18 @@
-import { Redis } from "@upstash/redis";
+import { kv } from "@vercel/kv";
 import { cookies } from "next/headers";
 
 const SESSION_PREFIX = "admin:session";
 const SESSION_TTL = 60 * 60 * 4;
-const redis = Redis.fromEnv();
 
 export async function createAdminSession() {
   const token = crypto.randomUUID();
-  await redis.set(
-    `${SESSION_PREFIX}:${token}`,
-    { createdAt: Date.now() },
-    { ex: SESSION_TTL }
-  );
+  await kv.set(`${SESSION_PREFIX}:${token}`, { createdAt: Date.now() }, { ex: SESSION_TTL });
   return token;
 }
 
 export async function isValidAdminSession(token: string | undefined) {
   if (!token) return false;
-  const session = await redis.get(`${SESSION_PREFIX}:${token}`);
+  const session = await kv.get(`${SESSION_PREFIX}:${token}`);
   return Boolean(session);
 }
 

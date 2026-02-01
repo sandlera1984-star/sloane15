@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { MediaItem } from "./ExclusiveClient";
@@ -317,16 +316,15 @@ export default function AdminClient({ isAdmin }: { isAdmin: boolean }) {
           {mediaItems.map((item) => (
             <div key={item.id} className="media-card">
               {item.type === "image" ? (
-                <Image
+                <img
                   src={item.url}
                   alt="Uploaded content"
-                  width={320}
-                  height={240}
                   style={{
                     width: "100%",
                     height: 140,
                     objectFit: "contain"
                   }}
+                  loading="lazy"
                 />
               ) : (
                 <video
